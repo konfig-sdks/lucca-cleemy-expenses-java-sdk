@@ -1,0 +1,3056 @@
+openapi: 3.0.3
+info:
+  contact:
+    email: developers@lucca.fr
+    name: Cleemy
+    url: https://www.lucca.fr
+  description: |
+    Welcome on the documentation for the CleemyExpenses API.
+  title: Cleemy Expenses
+  version: "1.0"
+  x-konfig-ignore:
+    potential-incorrect-type: true
+  x-konfig-has-globally-required-security: true
+servers:
+- description: Your production environment (France)
+  url: https://example.ilucca.net
+- description: Your test environment (France)
+  url: https://example.ilucca-test.net
+security:
+- Authorization: []
+tags:
+- description: Singular expenses.
+  name: Expenses
+- description: Collection of expenses submitted for approval.
+  name: ExpenseClaims
+paths:
+  /api/v3/expenseTempItems:
+    get:
+      description: |-
+        Retrieve a list of `ExpenseTempItems`.
+
+        The `purchasedOn` query parameter can operate comparisons with a given date-time value:
+        - `?purchasedOn=2021-01-01`: strict equality.
+        - `?purchasedOn=since,2021-01-01`: greater than or equal.
+        - `?purchasedOn=until,2021-01-01`: lower than or equal.
+        - `?purchasedOn=between,2021-01-01,2021-01-31`: comprised between two dates.
+      operationId: Expenses_listTempItems
+      parameters:
+      - description: Comma-separated list of user identifiers (int).
+        explode: true
+        in: query
+        name: ownerId
+        required: false
+        schema:
+          items:
+            description: "WARNING: Missing items property in array schema. Missing\
+              \ items property has been filled with this AnyType schema."
+          type: array
+        style: form
+      - description: "{fieldName},{'asc'||'desc'}. Example: `?orderby=purchasedOn,desc`"
+        explode: true
+        in: query
+        name: orderBy
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: "Examples: `between,2022-01-01,202201-31`."
+        explode: true
+        in: query
+        name: purchasedOn
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: "{offset},{limit}. Defaults to 0,1000."
+        explode: true
+        in: query
+        name: paging
+        required: true
+        schema:
+          example: "100,0"
+          type: string
+          x-konfig-original-example: "100,0"
+          x-konfig-generated-schema: konfig-generated-schema-components-parameters-paging-schema
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItemsResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+      summary: List ExpenseTempItems (temporary expense)
+      tags:
+      - Expenses
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v3-expenseTempItems
+      x-accepts: application/json
+    post:
+      operationId: Expenses_createNewTemporaryExpense
+      requestBody:
+        content:
+          application/json:
+            examples: {}
+            schema:
+              $ref: '#/components/schemas/ExpenseTempItem'
+      responses:
+        "200":
+          content:
+            application/json:
+              examples: {}
+              schema:
+                $ref: '#/components/schemas/ExpensesCreateNewTemporaryExpenseResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+      summary: Create a new temporary expense
+      tags:
+      - Expenses
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-post--api-v3-expenseTempItems
+      x-content-type: application/json
+      x-accepts: application/json
+  /api/v3/expenseTempItems/{expenseTempItemId}:
+    get:
+      operationId: Expenses_getById
+      parameters:
+      - description: Unique identifier of the ExpenseTempItem.
+        explode: false
+        in: path
+        name: expenseTempItemId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesGetByIdResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+      summary: Get an ExpenseTempItem by id
+      tags:
+      - Expenses
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v3-expenseTempItems-expenseTempItemId
+      x-accepts: application/json
+    put:
+      operationId: Expenses_updateExpenseTempItem
+      parameters:
+      - description: Unique identifier of the ExpenseTempItem.
+        explode: false
+        in: path
+        name: expenseTempItemId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseTempItem'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesUpdateExpenseTempItemResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+      summary: Update an ExpenseTempItem by id
+      tags:
+      - Expenses
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-put--api-v3-expenseTempItems-expenseTempItemId
+      x-content-type: application/json
+      x-accepts: application/json
+  /api/v3/expenseClaims/creation:
+    post:
+      description: |-
+        When a user wants to declare his expenses, he creates an `ExpenseClaim`.
+
+        An `ExpenseClaim` is created by regrouping one or more `ExpenseTempItems` and converting them into ExpenseClaimItems.
+
+        Once created, an `ExpenseClaim` has to be approved by his manager.
+
+        Multiple `ExpenseClaims` can be created through a single request.
+      operationId: ExpenseClaims_createNewExpenseClaim
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseClaimsCreateNewExpenseClaimRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseClaimsCreateNewExpenseClaimResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+      summary: Create a new ExpenseClaim
+      tags:
+      - ExpenseClaims
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-post--api-v3-expenseClaims-creation
+      x-content-type: application/json
+      x-accepts: application/json
+  /api/v3/expenseClaims:
+    get:
+      description: |-
+        Retrieve a list of `ExpenseClaims`.
+
+        The `declaredOn` query parameter can operate comparisons with a given date-time value:
+        - `?declaredOn=2021-01-01`: strict equality.
+        - `?declaredOn=since,2021-01-01`: greater than or equal.
+        - `?declaredOn=until,2021-01-01`: lower than or equal.
+        - `?declaredOn=between,2021-01-01,2021-01-31`: comprised between two dates.
+      operationId: ExpenseClaims_list
+      parameters:
+      - description: Comma-separated list of user identifiers (int).
+        explode: true
+        in: query
+        name: ownerId
+        required: false
+        schema:
+          items:
+            type: integer
+          type: array
+        style: form
+      - description: "{fieldName},{'asc'||'desc'}. Example: `?orderby=declaredOn,desc`"
+        explode: true
+        in: query
+        name: orderBy
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: "Examples: `between,2022-01-01,202201-31`."
+        explode: true
+        in: query
+        name: declaredOn
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: "{offset},{limit}. Defaults to 0,1000."
+        explode: true
+        in: query
+        name: paging
+        required: true
+        schema:
+          example: "100,0"
+          type: string
+          x-konfig-original-example: "100,0"
+          x-konfig-generated-schema: konfig-generated-schema-components-parameters-paging-schema
+        style: form
+      - description: "1: Created; 2: PartiallyApproved; 3: Approved; 4: Controlled;\
+          \ 5: ApprovedAndControlled; 6: PaymentInitiated; 7: Paid; 8: Refused; 9:\
+          \ Cancelled. Examples: `2,3` or `PartiallyApproved,Approved`."
+        explode: true
+        in: query
+        name: statusId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseClaimsListResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpensesListTempItems400Response'
+          description: Problem
+          x-do-not-generate: true
+      summary: List ExpenseClaims
+      tags:
+      - ExpenseClaims
+      x-konfig-operation-can-have-single-parameter: true
+      x-konfig-single-parameter-schema: konfig-generated-schema-single-parameter-schema-get--api-v3-expenseClaims
+      x-accepts: application/json
+components:
+  parameters:
+    paging:
+      description: "{offset},{limit}. Defaults to 0,1000."
+      explode: true
+      in: query
+      name: paging
+      required: true
+      schema:
+        example: "100,0"
+        type: string
+        x-konfig-original-example: "100,0"
+        x-konfig-generated-schema: konfig-generated-schema-components-parameters-paging-schema
+      style: form
+  responses:
+    ResponseProblem:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExpensesListTempItems400Response'
+      description: Problem
+      x-do-not-generate: true
+  schemas:
+    ExpenseTempItem:
+      description: "The `ExpenseTempItem`, or \"temporary expense\" is an expense\
+        \ that has not yet been declared (within an expense report) by its owner (the\
+        \ user who made the expense)."
+      example:
+        sourceId:
+          id: id
+        quantity: 1
+        attendees:
+          internal:
+          - null
+          - null
+          external:
+          - displayName: displayName
+            id: 1
+          - displayName: displayName
+            id: 1
+        customFields:
+          key:
+            code: code
+            name: name
+        processedAmounts:
+          vatBases:
+          - countryVatRateId: 1
+            amountExcludingVat: 5.962133916683182
+            countryVatRate:
+              name: name
+              id: 1
+              url: https://openapi-generator.tech
+            vatAmount: 1.4658129805029452
+          - countryVatRateId: 1
+            amountExcludingVat: 5.962133916683182
+            countryVatRate:
+              name: name
+              id: 1
+              url: https://openapi-generator.tech
+            vatAmount: 1.4658129805029452
+          netAmount: 57.9
+          currency:
+            name: Euro
+            id: GBP
+            url: https://lucca.ilucca.net/api/v3/currencies/EUR
+          grossAmount: 57.9
+          currencyId: GBP
+        merchant: ""
+        expenseReceipts:
+        - id: id
+        - id: id
+        source:
+          code: Api
+          name: API
+          id: 6
+        ownerId: 361
+        originalTransaction:
+          isExpenseAbroad: false
+          currency:
+            name: Euro
+            id: GBP
+            url: https://lucca.ilucca.net/api/v3/currencies/EUR
+          grossAmount: 45.26
+          currencyId: GBP
+        axisSections:
+        - null
+        - null
+        statusId:
+          id: 9.301444243932576
+        effectiveQuantity: 3
+        authorizedActions:
+          isEditable: true
+          isCancellable: true
+        paymentMethodId: null
+        expenseNatureId: 1
+        paymentMethod:
+          code: Api
+          name: API
+          id: 6
+        comment: ""
+        id: 11022
+        purchasedOn: 2000-01-23T04:56:07.000+00:00
+        mileage:
+          distance: 5.637376656633329
+          power: 2.3021358869347655
+          waypoints:
+          - ""
+          - ""
+        status:
+          code: Api
+          name: API
+          id: 6
+      properties:
+        id:
+          example: 11022
+          minimum: 1
+          readOnly: true
+          type: integer
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-id
+        purchasedOn:
+          description: Day the expense was made.
+          format: date-time
+          type: string
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-purchasedOn
+        originalTransaction:
+          $ref: '#/components/schemas/ExpenseTempItem_originalTransaction'
+        processedAmounts:
+          $ref: '#/components/schemas/ExpenseTempItem_processedAmounts'
+        expenseNatureId:
+          description: "Nature of the expense: Meals, Train, Taxi, Hotels, Taxi, Mileage...\
+            \ List depends on the app configuration."
+          example: 1
+          minimum: 1
+          type: integer
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-expenseNatureId
+        mileage:
+          $ref: '#/components/schemas/ExpenseTempItem_mileage'
+        quantity:
+          default: 1
+          description: The quantity when the expense type is 'Quantity'.
+          example: 1
+          minimum: 1
+          type: integer
+          x-konfig-original-example: 1
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-quantity
+        effectiveQuantity:
+          description: Calculated quantity when the expense type is 'Quantity' or
+            'Invitations' (number of attendees).
+          example: 3
+          minimum: 1
+          readOnly: true
+          type: integer
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-effectiveQuantity
+        attendees:
+          $ref: '#/components/schemas/ExpenseTempItem_attendees'
+        axisSections:
+          description: Axis sections values.
+          items:
+            $ref: '#/components/schemas/AxisSection'
+          type: array
+        customFields:
+          additionalProperties:
+            $ref: '#/components/schemas/ExpenseTempItem_customFields_value'
+          description: Values for custom fields.
+          type: object
+        merchant:
+          description: Merchant of the expense.
+        comment: {}
+        expenseReceipts:
+          description: "The original receipt (PDF file, image, ...)."
+          items:
+            $ref: '#/components/schemas/ExpenseReceipt'
+          type: array
+        authorizedActions:
+          $ref: '#/components/schemas/ExpenseTempItem_authorizedActions'
+        sourceId:
+          $ref: '#/components/schemas/SourceId'
+        source:
+          $ref: '#/components/schemas/Enum'
+        ownerId:
+          description: Unique identifier of the user that made this expense.
+          example: 361
+          type: integer
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-ownerId
+        paymentMethodId:
+          $ref: '#/components/schemas/PaymentMethodId'
+        paymentMethod:
+          $ref: '#/components/schemas/Enum'
+        statusId:
+          $ref: '#/components/schemas/StatusId'
+        status:
+          $ref: '#/components/schemas/Enum'
+      required:
+      - expenseNatureId
+      - purchasedOn
+      title: The ExpenseTempItem Resource
+      type: object
+      x-examples:
+        example-1:
+          id: 11022
+          purchasedOn: 2016-06-08T00:00:00
+          originalTransaction:
+            grossAmount: 45.26
+            currencyId: GBP
+            currency:
+              id: GBP
+              symbol: £
+            isExpenseAbroad: false
+          processedAmounts:
+            amount: 57.9
+            reimbursedAmount: 57.9
+            grossAmount: 57.9
+            currencyId: EUR
+            currency:
+              id: EUR
+              name: Euro
+              url: https://lucca.ilucca.net/api/v3/currencies/EUR
+            netAmount: 57.9
+            vatBases:
+            - countryVatRateId: 2
+              countryVatRate:
+                id: 2
+                url: https://lucca.ilucca.net/api/v3/countryvatrates/2
+              vatAmount: 0
+              amountExcludingVat: 57.9
+              isDeprecatedVat: false
+          expenseNatureId: 1
+          mileage: {}
+          quantity: 1
+          effectiveQuantity: 3
+          attendees:
+            internal:
+            - id: 338
+              displayName: Catteau Bruno
+            external:
+            - id: 46
+              displayName: Test Corp / Test TS
+          axisSections:
+          - id: 658
+            code: RDEV
+            name: Recherche & Développement
+            axisId: 4
+          customFields:
+            "1":
+              code: "false"
+              name: Non
+          merchant: Pub The Wellington
+          comment: Exemple dépense
+          warnings:
+            dayOff: false
+            isConstrained: false
+            showDayOffWarning: false
+            isAboveWarningLimit: false
+            isAbsoluteLimitOverridden: false
+          authorizedActions:
+            isCancellable: true
+            isEditable: true
+          source:
+            value: 6
+            id: 6
+            code: Api
+            name: API
+          ownerId: 361
+          paymentMethod:
+            value: 0
+            id: 0
+            code: User
+            name: Collaborateur
+          status:
+            value: 2
+            id: 2
+            code: Valid
+            name: Valide
+      x-tags:
+      - Expenses
+    ExpenseClaim:
+      description: |-
+        When a user wants to declare his expenses, he creates an `ExpenseClaim`.
+
+        An `ExpenseClaim` is created by regrouping one or more `ExpenseTempItems` and converting them into ExpenseClaimItems.
+
+        Once created, an `ExpenseClaim` has to be approved by his manager.
+
+        Multiple `ExpenseClaims` can be created through a single request.
+      example:
+        sourceId:
+          id: id
+        departmentId: 3
+        source:
+          code: Api
+          name: API
+          id: 6
+        ownerId: 5
+        createdOn: 2000-01-23T04:56:07.000+00:00
+        legalEntity:
+          name: name
+          id: 7
+          url: url
+        modifiedOn: 2000-01-23T04:56:07.000+00:00
+        legalEntityId: 9
+        paymentMethodId: null
+        authorizedActions:
+          isApprovable: true
+          isControllable: true
+          isEditable: true
+          isCancellable: true
+          isUnControllable: true
+        declaredOn: 2000-01-23T04:56:07.000+00:00
+        currency:
+          name: Euro
+          id: GBP
+          url: https://lucca.ilucca.net/api/v3/currencies/EUR
+        id: 1
+        department:
+          name: name
+          id: 7
+          url: url
+        currencyId: GBP
+        owner:
+          firstName: firstName
+          lastName: lastName
+          name: name
+          id: 1
+          url: https://openapi-generator.tech
+        approvalStateId:
+          id: 1.4658129805029452
+        author:
+          name: name
+          id: 7
+          url: url
+        approvalState:
+          code: Api
+          name: API
+          id: 6
+        paymentReceivedOn: 2000-01-23T04:56:07.000+00:00
+        authorId: 2
+        statusId:
+          id: 6.027456183070403
+        name: name
+        paymentMethod:
+          code: Api
+          name: API
+          id: 6
+        status:
+          code: Api
+          name: API
+          id: 6
+      properties:
+        id:
+          minimum: 1
+          readOnly: true
+          type: integer
+        name:
+          description: "Name of the expense claim. If empty, it will be generated\
+            \ with the month and year of the last of claim item."
+          maxLength: 255
+          type: string
+        declaredOn:
+          description: Day the expenseClaim has been declared (Time zone Europe/Paris).
+          format: date-time
+          readOnly: true
+          type: string
+        createdOn:
+          description: Day the expenseClaim has been created (Time zone Europe/Paris).
+          format: date-time
+          readOnly: true
+          type: string
+        modifiedOn:
+          description: Day the expenseClaim has been modified (Time zone Europe/Paris).
+          format: date-time
+          readOnly: true
+          type: string
+        paymentReceivedOn:
+          description: Day the expenseClaim has been paid (Time zone Europe/Paris).
+          format: date-time
+          readOnly: true
+          type: string
+        sourceId:
+          $ref: '#/components/schemas/SourceId'
+        source:
+          $ref: '#/components/schemas/Enum'
+        paymentMethodId:
+          $ref: '#/components/schemas/PaymentMethodId'
+        paymentMethod:
+          $ref: '#/components/schemas/Enum'
+        statusId:
+          $ref: '#/components/schemas/ClaimStatusId'
+        status:
+          $ref: '#/components/schemas/Enum'
+        approvalStateId:
+          $ref: '#/components/schemas/ApprovalStateId'
+        approvalState:
+          $ref: '#/components/schemas/Enum'
+        authorizedActions:
+          $ref: '#/components/schemas/ExpenseClaim_authorizedActions'
+        ownerId:
+          description: Unique identifier of the user that made this expenseClaim.
+          readOnly: true
+          type: integer
+        owner:
+          $ref: '#/components/schemas/Owner'
+        authorId:
+          description: Unique identifier of the user that created this grouping of
+            expense.
+          type: integer
+        author:
+          $ref: '#/components/schemas/EntityBase'
+        legalEntityId:
+          type: integer
+        legalEntity:
+          $ref: '#/components/schemas/EntityBase'
+        departmentId:
+          type: integer
+        department:
+          $ref: '#/components/schemas/EntityBase'
+        currencyId:
+          description: "ISO code of the currency (eg: 'EUR', 'USD', 'GBP', ...)."
+          example: GBP
+          title: CurrencyId
+          type: string
+          x-stoplight:
+            id: kby33ilsirg33
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-CurrencyId
+        currency:
+          $ref: '#/components/schemas/Currency'
+      required:
+      - createdOn
+      - declaredOn
+      - modifiedOn
+      title: The ExpenseClaim Resource
+      type: object
+      x-tags:
+      - ExpenseClaims
+      x-stoplight:
+        id: fc3294987a78c
+    ApprovalStateId:
+      description: |-
+        State of the approval of the expenseClaim.
+        - 0: the approval is created.
+        - 1: the expenseClaim has been partially approved.
+        - 2: the expenseClaim has been approved.
+        - 3: the expenseClaim has been refused.
+        - 4: the expenseClaim has been cancelled.
+      example:
+        id: 1.4658129805029452
+      properties:
+        id:
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          type: number
+      title: ApprovalStateId
+      type: object
+      x-stoplight:
+        id: 87aaec5bfc487
+    ClaimStatusId:
+      description: |-
+        Status of the expenseClaim.
+        - 1: the expenseClaim is created.
+        - 2: the expenseClaim has been partially approved.
+        - 3: the expenseClaim has been approved.
+        - 4: the expenseClaim has been controlled.
+        - 5: the expenseClaim has been approved and controlled.
+        - 6: the payment of the expenseClaim has been initiated.
+        - 7: the expenseClaim has been paid.
+        - 8: the expenseClaim has been refused.
+        - 9: the expenseClaim has been cancelled.
+      example:
+        id: 6.027456183070403
+      properties:
+        id:
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          type: number
+      title: ClaimStatusId
+      type: object
+      x-stoplight:
+        id: 4669d280e9c36
+    Currency:
+      description: ""
+      example:
+        name: Euro
+        id: GBP
+        url: https://lucca.ilucca.net/api/v3/currencies/EUR
+      properties:
+        id:
+          description: "ISO code of the currency (eg: 'EUR', 'USD', 'GBP', ...)."
+          example: GBP
+          title: CurrencyId
+          type: string
+          x-stoplight:
+            id: kby33ilsirg33
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-CurrencyId
+        name:
+          description: "Label of the currency (eg: Pound sterling)."
+          example: Euro
+          type: string
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-Currency-properties-name
+        url:
+          example: https://lucca.ilucca.net/api/v3/currencies/EUR
+          format: uri
+          type: string
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-Currency-properties-url
+      title: Currency
+      type: object
+      x-stoplight:
+        id: 2840ygv41p7be
+    CurrencyId:
+      description: "ISO code of the currency (eg: 'EUR', 'USD', 'GBP', ...)."
+      example: GBP
+      title: CurrencyId
+      type: string
+      x-stoplight:
+        id: kby33ilsirg33
+      x-konfig-generated-schema: konfig-generated-schema-components-schemas-CurrencyId
+    EntityBase:
+      example:
+        name: name
+        id: 7
+        url: url
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        url:
+          type: string
+      title: EntityBase
+      type: object
+      x-stoplight:
+        id: 1244a0846b0bd
+    Enum:
+      description: ""
+      example:
+        code: Api
+        name: API
+        id: 6
+      properties:
+        id:
+          example: 6
+          type: number
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-Enum-properties-id
+        name:
+          example: API
+          readOnly: true
+          type: string
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-Enum-properties-name
+        code:
+          example: Api
+          type: string
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-Enum-properties-code
+      title: Enum
+      type: object
+      x-stoplight:
+        id: 7kzc8264nzaki
+    ExpenseReceipt:
+      description: An expense's receipt.
+      example:
+        id: id
+      properties:
+        id:
+          type: string
+      title: ExpenseReceipt
+      type: object
+      x-stoplight:
+        id: lx79dyr1vtka8
+    Owner:
+      example:
+        firstName: firstName
+        lastName: lastName
+        name: name
+        id: 1
+        url: https://openapi-generator.tech
+      properties:
+        id:
+          minimum: 1
+          type: integer
+        name:
+          type: string
+        url:
+          format: uri
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+      title: Owner
+      type: object
+      x-stoplight:
+        id: ff1b8ac2d9d2e
+    PaymentMethodId:
+      description: |-
+        How this expense was made: the owner used his money, an enterprise debit card, or a Cleemy card:
+        - 0: User
+        - 1: CorporateCard
+        - 3: Cleemy Card
+      enum:
+      - 0
+      - 1
+      - 3
+      title: PaymentMethodId
+      type: number
+      x-stoplight:
+        id: ne5zj41vezy0e
+    SourceId:
+      description: |-
+        The source describes how the expense was created:
+        - 0: Legacy
+        - 1: OldImport
+        - 2: ImportByCb
+        - 3: ImportByNature
+        - 4: Anytime
+        - 5: BudgetInsight
+        - 6: Api
+        - 7: Ocr
+        - 8: Reconciliation
+        - 9: InvoiceAggregator
+        - 10: EmailAttachments
+        - 11: FtpStatementImport
+        - 12: CleemyPayment
+      example:
+        id: id
+      properties:
+        id:
+          type: string
+      title: SourceId
+      type: object
+      x-stoplight:
+        id: 2u3my2xgs72qd
+    StatusId:
+      description: |-
+        Status of the expense.
+        - 0: the expense is not valid.
+        - 1: the expense has been completed by the system and review is still pending
+        - 2: the expense has been completed and reviewed and it can be declared.
+      example:
+        id: 9.301444243932576
+      properties:
+        id:
+          enum:
+          - 0
+          - 1
+          - 2
+          type: number
+      title: StatusId
+      type: object
+      x-stoplight:
+        id: 47xkq5bpvld0b
+    User: {}
+    AxisSection: {}
+    ExpenseClaimsCreateNewExpenseClaimRequest:
+      items:
+        $ref: '#/components/schemas/ExpenseClaimsCreateNewExpenseClaimRequest_inner'
+      type: array
+      x-examples:
+        example-1:
+        - title: Mars 2016
+          expenseTempItems:
+          - id: 4614
+          - id: 4630
+    ExpensesListTempItemsResponse:
+      example:
+        data:
+          items:
+          - sourceId:
+              id: id
+            quantity: 1
+            attendees:
+              internal:
+              - null
+              - null
+              external:
+              - displayName: displayName
+                id: 1
+              - displayName: displayName
+                id: 1
+            customFields:
+              key:
+                code: code
+                name: name
+            processedAmounts:
+              vatBases:
+              - countryVatRateId: 1
+                amountExcludingVat: 5.962133916683182
+                countryVatRate:
+                  name: name
+                  id: 1
+                  url: https://openapi-generator.tech
+                vatAmount: 1.4658129805029452
+              - countryVatRateId: 1
+                amountExcludingVat: 5.962133916683182
+                countryVatRate:
+                  name: name
+                  id: 1
+                  url: https://openapi-generator.tech
+                vatAmount: 1.4658129805029452
+              netAmount: 57.9
+              currency:
+                name: Euro
+                id: GBP
+                url: https://lucca.ilucca.net/api/v3/currencies/EUR
+              grossAmount: 57.9
+              currencyId: GBP
+            merchant: ""
+            expenseReceipts:
+            - id: id
+            - id: id
+            source:
+              code: Api
+              name: API
+              id: 6
+            ownerId: 361
+            originalTransaction:
+              isExpenseAbroad: false
+              currency:
+                name: Euro
+                id: GBP
+                url: https://lucca.ilucca.net/api/v3/currencies/EUR
+              grossAmount: 45.26
+              currencyId: GBP
+            axisSections:
+            - null
+            - null
+            statusId:
+              id: 9.301444243932576
+            effectiveQuantity: 3
+            authorizedActions:
+              isEditable: true
+              isCancellable: true
+            paymentMethodId: null
+            expenseNatureId: 1
+            paymentMethod:
+              code: Api
+              name: API
+              id: 6
+            comment: ""
+            id: 11022
+            purchasedOn: 2000-01-23T04:56:07.000+00:00
+            mileage:
+              distance: 5.637376656633329
+              power: 2.3021358869347655
+              waypoints:
+              - ""
+              - ""
+            status:
+              code: Api
+              name: API
+              id: 6
+          - sourceId:
+              id: id
+            quantity: 1
+            attendees:
+              internal:
+              - null
+              - null
+              external:
+              - displayName: displayName
+                id: 1
+              - displayName: displayName
+                id: 1
+            customFields:
+              key:
+                code: code
+                name: name
+            processedAmounts:
+              vatBases:
+              - countryVatRateId: 1
+                amountExcludingVat: 5.962133916683182
+                countryVatRate:
+                  name: name
+                  id: 1
+                  url: https://openapi-generator.tech
+                vatAmount: 1.4658129805029452
+              - countryVatRateId: 1
+                amountExcludingVat: 5.962133916683182
+                countryVatRate:
+                  name: name
+                  id: 1
+                  url: https://openapi-generator.tech
+                vatAmount: 1.4658129805029452
+              netAmount: 57.9
+              currency:
+                name: Euro
+                id: GBP
+                url: https://lucca.ilucca.net/api/v3/currencies/EUR
+              grossAmount: 57.9
+              currencyId: GBP
+            merchant: ""
+            expenseReceipts:
+            - id: id
+            - id: id
+            source:
+              code: Api
+              name: API
+              id: 6
+            ownerId: 361
+            originalTransaction:
+              isExpenseAbroad: false
+              currency:
+                name: Euro
+                id: GBP
+                url: https://lucca.ilucca.net/api/v3/currencies/EUR
+              grossAmount: 45.26
+              currencyId: GBP
+            axisSections:
+            - null
+            - null
+            statusId:
+              id: 9.301444243932576
+            effectiveQuantity: 3
+            authorizedActions:
+              isEditable: true
+              isCancellable: true
+            paymentMethodId: null
+            expenseNatureId: 1
+            paymentMethod:
+              code: Api
+              name: API
+              id: 6
+            comment: ""
+            id: 11022
+            purchasedOn: 2000-01-23T04:56:07.000+00:00
+            mileage:
+              distance: 5.637376656633329
+              power: 2.3021358869347655
+              waypoints:
+              - ""
+              - ""
+            status:
+              code: Api
+              name: API
+              id: 6
+      properties:
+        data:
+          $ref: '#/components/schemas/ExpensesListTempItemsResponse_data'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ExpensesListTempItems400Response:
+      properties:
+        Status:
+          description: HTTP status code.
+          example: 401
+          type: integer
+          x-konfig-original-example: 401
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpensesListTempItems400Response-properties-Status
+        Message:
+          description: Human readable error message.
+          example: Unauthorized
+          type: string
+          x-konfig-original-example: Unauthorized
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpensesListTempItems400Response-properties-Message
+      type: object
+      x-konfig-is-used-in-non-successful-response: true
+      x-do-not-generate: true
+    ExpensesCreateNewTemporaryExpenseResponse:
+      example:
+        data:
+          sourceId:
+            id: id
+          quantity: 1
+          attendees:
+            internal:
+            - null
+            - null
+            external:
+            - displayName: displayName
+              id: 1
+            - displayName: displayName
+              id: 1
+          customFields:
+            key:
+              code: code
+              name: name
+          processedAmounts:
+            vatBases:
+            - countryVatRateId: 1
+              amountExcludingVat: 5.962133916683182
+              countryVatRate:
+                name: name
+                id: 1
+                url: https://openapi-generator.tech
+              vatAmount: 1.4658129805029452
+            - countryVatRateId: 1
+              amountExcludingVat: 5.962133916683182
+              countryVatRate:
+                name: name
+                id: 1
+                url: https://openapi-generator.tech
+              vatAmount: 1.4658129805029452
+            netAmount: 57.9
+            currency:
+              name: Euro
+              id: GBP
+              url: https://lucca.ilucca.net/api/v3/currencies/EUR
+            grossAmount: 57.9
+            currencyId: GBP
+          merchant: ""
+          expenseReceipts:
+          - id: id
+          - id: id
+          source:
+            code: Api
+            name: API
+            id: 6
+          ownerId: 361
+          originalTransaction:
+            isExpenseAbroad: false
+            currency:
+              name: Euro
+              id: GBP
+              url: https://lucca.ilucca.net/api/v3/currencies/EUR
+            grossAmount: 45.26
+            currencyId: GBP
+          axisSections:
+          - null
+          - null
+          statusId:
+            id: 9.301444243932576
+          effectiveQuantity: 3
+          authorizedActions:
+            isEditable: true
+            isCancellable: true
+          paymentMethodId: null
+          expenseNatureId: 1
+          paymentMethod:
+            code: Api
+            name: API
+            id: 6
+          comment: ""
+          id: 11022
+          purchasedOn: 2000-01-23T04:56:07.000+00:00
+          mileage:
+            distance: 5.637376656633329
+            power: 2.3021358869347655
+            waypoints:
+            - ""
+            - ""
+          status:
+            code: Api
+            name: API
+            id: 6
+      properties:
+        data:
+          $ref: '#/components/schemas/ExpenseTempItem'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ExpensesGetByIdResponse:
+      example:
+        data:
+          sourceId:
+            id: id
+          quantity: 1
+          attendees:
+            internal:
+            - null
+            - null
+            external:
+            - displayName: displayName
+              id: 1
+            - displayName: displayName
+              id: 1
+          customFields:
+            key:
+              code: code
+              name: name
+          processedAmounts:
+            vatBases:
+            - countryVatRateId: 1
+              amountExcludingVat: 5.962133916683182
+              countryVatRate:
+                name: name
+                id: 1
+                url: https://openapi-generator.tech
+              vatAmount: 1.4658129805029452
+            - countryVatRateId: 1
+              amountExcludingVat: 5.962133916683182
+              countryVatRate:
+                name: name
+                id: 1
+                url: https://openapi-generator.tech
+              vatAmount: 1.4658129805029452
+            netAmount: 57.9
+            currency:
+              name: Euro
+              id: GBP
+              url: https://lucca.ilucca.net/api/v3/currencies/EUR
+            grossAmount: 57.9
+            currencyId: GBP
+          merchant: ""
+          expenseReceipts:
+          - id: id
+          - id: id
+          source:
+            code: Api
+            name: API
+            id: 6
+          ownerId: 361
+          originalTransaction:
+            isExpenseAbroad: false
+            currency:
+              name: Euro
+              id: GBP
+              url: https://lucca.ilucca.net/api/v3/currencies/EUR
+            grossAmount: 45.26
+            currencyId: GBP
+          axisSections:
+          - null
+          - null
+          statusId:
+            id: 9.301444243932576
+          effectiveQuantity: 3
+          authorizedActions:
+            isEditable: true
+            isCancellable: true
+          paymentMethodId: null
+          expenseNatureId: 1
+          paymentMethod:
+            code: Api
+            name: API
+            id: 6
+          comment: ""
+          id: 11022
+          purchasedOn: 2000-01-23T04:56:07.000+00:00
+          mileage:
+            distance: 5.637376656633329
+            power: 2.3021358869347655
+            waypoints:
+            - ""
+            - ""
+          status:
+            code: Api
+            name: API
+            id: 6
+      properties:
+        data:
+          $ref: '#/components/schemas/ExpenseTempItem'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ExpensesUpdateExpenseTempItemResponse:
+      example:
+        data:
+          sourceId:
+            id: id
+          quantity: 1
+          attendees:
+            internal:
+            - null
+            - null
+            external:
+            - displayName: displayName
+              id: 1
+            - displayName: displayName
+              id: 1
+          customFields:
+            key:
+              code: code
+              name: name
+          processedAmounts:
+            vatBases:
+            - countryVatRateId: 1
+              amountExcludingVat: 5.962133916683182
+              countryVatRate:
+                name: name
+                id: 1
+                url: https://openapi-generator.tech
+              vatAmount: 1.4658129805029452
+            - countryVatRateId: 1
+              amountExcludingVat: 5.962133916683182
+              countryVatRate:
+                name: name
+                id: 1
+                url: https://openapi-generator.tech
+              vatAmount: 1.4658129805029452
+            netAmount: 57.9
+            currency:
+              name: Euro
+              id: GBP
+              url: https://lucca.ilucca.net/api/v3/currencies/EUR
+            grossAmount: 57.9
+            currencyId: GBP
+          merchant: ""
+          expenseReceipts:
+          - id: id
+          - id: id
+          source:
+            code: Api
+            name: API
+            id: 6
+          ownerId: 361
+          originalTransaction:
+            isExpenseAbroad: false
+            currency:
+              name: Euro
+              id: GBP
+              url: https://lucca.ilucca.net/api/v3/currencies/EUR
+            grossAmount: 45.26
+            currencyId: GBP
+          axisSections:
+          - null
+          - null
+          statusId:
+            id: 9.301444243932576
+          effectiveQuantity: 3
+          authorizedActions:
+            isEditable: true
+            isCancellable: true
+          paymentMethodId: null
+          expenseNatureId: 1
+          paymentMethod:
+            code: Api
+            name: API
+            id: 6
+          comment: ""
+          id: 11022
+          purchasedOn: 2000-01-23T04:56:07.000+00:00
+          mileage:
+            distance: 5.637376656633329
+            power: 2.3021358869347655
+            waypoints:
+            - ""
+            - ""
+          status:
+            code: Api
+            name: API
+            id: 6
+      properties:
+        data:
+          $ref: '#/components/schemas/ExpenseTempItem'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    ExpenseClaimsCreateNewExpenseClaimResponse:
+      example:
+        data:
+        - createdExpenseClaim:
+            nextApprover:
+              firstName: firstName
+              lastName: lastName
+            id: 0
+        - createdExpenseClaim:
+            nextApprover:
+              firstName: firstName
+              lastName: lastName
+            id: 0
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/ExpenseClaimsCreateNewExpenseClaimResponse_data_inner'
+          type: array
+      type: object
+      x-examples:
+        example-1:
+          createdExpenseClaim:
+            id: 369
+            nextApprover:
+              firstName: Will
+              lastName: Riker
+      x-konfig-is-used-in-successful-response: true
+    ExpenseClaimsListResponse:
+      example:
+        data:
+          items:
+          - sourceId:
+              id: id
+            departmentId: 3
+            source:
+              code: Api
+              name: API
+              id: 6
+            ownerId: 5
+            createdOn: 2000-01-23T04:56:07.000+00:00
+            legalEntity:
+              name: name
+              id: 7
+              url: url
+            modifiedOn: 2000-01-23T04:56:07.000+00:00
+            legalEntityId: 9
+            paymentMethodId: null
+            authorizedActions:
+              isApprovable: true
+              isControllable: true
+              isEditable: true
+              isCancellable: true
+              isUnControllable: true
+            declaredOn: 2000-01-23T04:56:07.000+00:00
+            currency:
+              name: Euro
+              id: GBP
+              url: https://lucca.ilucca.net/api/v3/currencies/EUR
+            id: 1
+            department:
+              name: name
+              id: 7
+              url: url
+            currencyId: GBP
+            owner:
+              firstName: firstName
+              lastName: lastName
+              name: name
+              id: 1
+              url: https://openapi-generator.tech
+            approvalStateId:
+              id: 1.4658129805029452
+            author:
+              name: name
+              id: 7
+              url: url
+            approvalState:
+              code: Api
+              name: API
+              id: 6
+            paymentReceivedOn: 2000-01-23T04:56:07.000+00:00
+            authorId: 2
+            statusId:
+              id: 6.027456183070403
+            name: name
+            paymentMethod:
+              code: Api
+              name: API
+              id: 6
+            status:
+              code: Api
+              name: API
+              id: 6
+          - sourceId:
+              id: id
+            departmentId: 3
+            source:
+              code: Api
+              name: API
+              id: 6
+            ownerId: 5
+            createdOn: 2000-01-23T04:56:07.000+00:00
+            legalEntity:
+              name: name
+              id: 7
+              url: url
+            modifiedOn: 2000-01-23T04:56:07.000+00:00
+            legalEntityId: 9
+            paymentMethodId: null
+            authorizedActions:
+              isApprovable: true
+              isControllable: true
+              isEditable: true
+              isCancellable: true
+              isUnControllable: true
+            declaredOn: 2000-01-23T04:56:07.000+00:00
+            currency:
+              name: Euro
+              id: GBP
+              url: https://lucca.ilucca.net/api/v3/currencies/EUR
+            id: 1
+            department:
+              name: name
+              id: 7
+              url: url
+            currencyId: GBP
+            owner:
+              firstName: firstName
+              lastName: lastName
+              name: name
+              id: 1
+              url: https://openapi-generator.tech
+            approvalStateId:
+              id: 1.4658129805029452
+            author:
+              name: name
+              id: 7
+              url: url
+            approvalState:
+              code: Api
+              name: API
+              id: 6
+            paymentReceivedOn: 2000-01-23T04:56:07.000+00:00
+            authorId: 2
+            statusId:
+              id: 6.027456183070403
+            name: name
+            paymentMethod:
+              code: Api
+              name: API
+              id: 6
+            status:
+              code: Api
+              name: API
+              id: 6
+      properties:
+        data:
+          $ref: '#/components/schemas/ExpenseClaimsListResponse_data'
+      type: object
+      x-konfig-is-used-in-successful-response: true
+    konfig-generated-schema-components-parameters-paging-schema:
+      example: "100,0"
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-ExpenseTempItem-properties-id:
+      example: 11022
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-ExpenseTempItem-properties-purchasedOn:
+      example: 2016-06-08T00:00:00
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-ExpenseTempItem-properties-originalTransaction-properties-grossAmount:
+      example: 45.26
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-ExpenseTempItem-properties-originalTransaction-properties-isExpenseAbroad:
+      example: false
+      type: boolean
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-ExpenseTempItem-properties-processedAmounts-properties-grossAmount:
+      example: 57.9
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-ExpenseTempItem-properties-processedAmounts-properties-netAmount:
+      example: 57.9
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-ExpenseTempItem-properties-expenseNatureId:
+      example: 1
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-ExpenseTempItem-properties-quantity:
+      example: 1
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-ExpenseTempItem-properties-effectiveQuantity:
+      example: 3
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-ExpenseTempItem-properties-authorizedActions-properties-isCancellable:
+      example: true
+      type: boolean
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-ExpenseTempItem-properties-authorizedActions-properties-isEditable:
+      example: true
+      type: boolean
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-ExpenseTempItem-properties-ownerId:
+      example: 361
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-Currency-properties-name:
+      example: Euro
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-Currency-properties-url:
+      example: https://lucca.ilucca.net/api/v3/currencies/EUR
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-CurrencyId:
+      example: GBP
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-Enum-properties-id:
+      example: 6
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-Enum-properties-name:
+      example: API
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-Enum-properties-code:
+      example: Api
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-id:
+      example: 416
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-name:
+      example: John Doe
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-url:
+      example: http://lucca.test/api/users/1
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-displayName:
+      example: Doe John
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-modifiedOn:
+      example: 2015-09-07T10:20:06.583
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-lastName:
+      example: DOE
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-firstName:
+      example: John
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-login:
+      example: jdoe
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-mail:
+      example: no-reply@lucca.fr
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-dtContractStart:
+      example: 2014-09-01T00:00:00
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-birthDate:
+      example: 1989-12-22T00:00:00
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-employeeNumber:
+      example: "00057"
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-calendar-properties-id:
+      example: 1
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-calendar-properties-url:
+      example: http://lucca.test/api/v3/publicHolidayCalendars/1
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-calendar-properties-name:
+      example: Jours fériés en France
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-culture-properties-id:
+      example: 1036
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-culture-properties-name:
+      example: français (France)
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-culture-properties-url:
+      example: http://lucca.test/api/v3/cultures/1036
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-picture-properties-id:
+      example: 74d381db-dd4d-4f64-bc1e-582d806e58a8
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-picture-properties-url:
+      example: http://lucca.test/api/v3/files/74d381db-dd4d-4f64-bc1e-582d806e58a8
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-picture-properties-name:
+      example: jdoe.png
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-applicationData-properties-profile_figgo-properties-id:
+      example: 1
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-applicationData-properties-profile_figgo-properties-name:
+      example: Cadre (218 jours)
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-applicationData-properties-profile_figgo-properties-url:
+      example: https://lucca.local.dev/api/v3/leaveprofiles/1
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-applicationData-properties-profile_utime-properties-id:
+      example: 1
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-applicationData-properties-profile_utime-properties-name:
+      example: Lucca
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-applicationData-properties-profile_utime-properties-url:
+      example: https://lucca.local.dev/api/v3/utimeprofile_ede6d6bb22bcb47bf5b839d5f653fc7e41122f0eea37a7786ea9e095537a705c/1
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-legalEntity-properties-id:
+      example: 1
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-legalEntity-properties-name:
+      example: Lucca
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-legalEntity-properties-url:
+      example: http://lucca.test/api/v3/legalEntities/1
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-department-properties-id:
+      example: 13
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-department-properties-name:
+      example: BU Timmi/Lucca
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-department-properties-url:
+      example: http://lucca.test/api/v3/departments/13
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-manager-properties-id:
+      example: 383
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-manager-properties-name:
+      example: Roger Smith
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-manager-properties-url:
+      example: http://lucca.test/api/v3/users/383
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-rolePrincipal-properties-id:
+      example: 55
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-rolePrincipal-properties-name:
+      example: User
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-User-User-properties-rolePrincipal-properties-url:
+      example: http://lucca.test/api/v3/roles/55
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-ExpensesListTempItems400Response-properties-Status:
+      example: 401
+      type: number
+      x-do-not-generate: true
+    konfig-generated-schema-components-schemas-ExpensesListTempItems400Response-properties-Message:
+      example: Unauthorized
+      type: string
+      x-do-not-generate: true
+    konfig-generated-schema-single-parameter-schema-get--api-v3-expenseTempItems:
+      properties:
+        ownerId:
+          items:
+            description: "WARNING: Missing items property in array schema. Missing\
+              \ items property has been filled with this AnyType schema."
+          type: array
+        orderBy:
+          type: string
+        purchasedOn:
+          type: string
+        paging:
+          example: "100,0"
+          type: string
+          x-konfig-original-example: "100,0"
+          x-konfig-generated-schema: konfig-generated-schema-components-parameters-paging-schema
+      required:
+      - paging
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - ownerId
+      - orderBy
+      - purchasedOn
+      - paging
+    konfig-generated-schema-single-parameter-schema-post--api-v3-expenseTempItems:
+      properties:
+        id:
+          example: 11022
+          minimum: 1
+          readOnly: true
+          type: integer
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-id
+        purchasedOn:
+          description: Day the expense was made.
+          format: date-time
+          type: string
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-purchasedOn
+        originalTransaction:
+          description: Expense amount in original currency.
+          properties:
+            grossAmount:
+              example: 45.26
+              multipleOf: 0.01
+              type: number
+              x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-originalTransaction-properties-grossAmount
+            currencyId:
+              $ref: '#/components/schemas/CurrencyId'
+            isExpenseAbroad:
+              description: Whether the expense was made in a different country than
+                the owner establishment's.
+              example: false
+              type: boolean
+              x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-originalTransaction-properties-isExpenseAbroad
+            currency:
+              $ref: '#/components/schemas/Currency'
+          type: object
+        processedAmounts:
+          description: Various amounts in the establishment's currency.
+          properties:
+            grossAmount:
+              description: Original transaction amount converted into the establishment's
+                currency.
+              example: 57.9
+              multipleOf: 0.01
+              type: number
+              x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-processedAmounts-properties-grossAmount
+            currencyId:
+              $ref: '#/components/schemas/CurrencyId'
+            currency:
+              $ref: '#/components/schemas/Currency'
+            netAmount:
+              description: The converted amount after the expense policy has been
+                applied.
+              example: 57.9
+              multipleOf: 0.01
+              type: number
+              x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-processedAmounts-properties-netAmount
+            vatBases:
+              items:
+                properties:
+                  countryVatRateId:
+                    minimum: 1
+                    type: integer
+                  countryVatRate:
+                    description: Applicable VAT rate for this amount.
+                    properties:
+                      id:
+                        minimum: 1
+                        type: integer
+                      name:
+                        type: string
+                      url:
+                        format: uri
+                        type: string
+                    type: object
+                  vatAmount:
+                    multipleOf: 0.01
+                    type: number
+                  amountExcludingVat:
+                    multipleOf: 0.01
+                    type: number
+                type: object
+              type: array
+          readOnly: true
+          type: object
+        expenseNatureId:
+          description: "Nature of the expense: Meals, Train, Taxi, Hotels, Taxi, Mileage...\
+            \ List depends on the app configuration."
+          example: 1
+          minimum: 1
+          type: integer
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-expenseNatureId
+        mileage:
+          description: Additional information when the expense type is mileage.
+          properties:
+            distance:
+              description: Distance where the unit depends on the establishment.
+              type: number
+            power:
+              description: Tax horsepower of the vehicle.
+              type: number
+            waypoints:
+              description: The collection of waypoints including intermediate waypoints.
+              items: {}
+              type: array
+        quantity:
+          default: 1
+          description: The quantity when the expense type is 'Quantity'.
+          example: 1
+          minimum: 1
+          type: integer
+          x-konfig-original-example: 1
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-quantity
+        effectiveQuantity:
+          description: Calculated quantity when the expense type is 'Quantity' or
+            'Invitations' (number of attendees).
+          example: 3
+          minimum: 1
+          readOnly: true
+          type: integer
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-effectiveQuantity
+        attendees:
+          description: Additional information when the expense type is 'Invitation'.
+          properties:
+            internal:
+              description: "Attendees who work for the company (ie: Users in the system)."
+              items:
+                $ref: '#/components/schemas/User'
+              type: array
+            external:
+              description: "External attendees (eg: clients, candidates)."
+              items:
+                description: Id of the custom field.
+                properties:
+                  id:
+                    minimum: 1
+                    type: integer
+                  displayName:
+                    type: string
+                type: object
+              type: array
+        axisSections:
+          description: Axis sections values.
+          items:
+            $ref: '#/components/schemas/AxisSection'
+          type: array
+        customFields:
+          additionalProperties:
+            properties:
+              code:
+                description: Value inputted by the user.
+                type: string
+              name:
+                description: "Label corresponding to the input value based on the\
+                  \ configuration (eg: 'Yes' for checkbox)."
+                readOnly: true
+                type: string
+            type: object
+          description: Values for custom fields.
+          type: object
+        merchant:
+          description: Merchant of the expense.
+        comment: {}
+        expenseReceipts:
+          description: "The original receipt (PDF file, image, ...)."
+          items:
+            $ref: '#/components/schemas/ExpenseReceipt'
+          type: array
+        authorizedActions:
+          description: Authorized actions on the expense for the current user.
+          properties:
+            isCancellable:
+              description: Expense can be deleted by the current authenticated user.
+              example: true
+              type: boolean
+              x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-authorizedActions-properties-isCancellable
+            isEditable:
+              description: Expense can be edited by the current authenticated user.
+              example: true
+              type: boolean
+              x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-authorizedActions-properties-isEditable
+          readOnly: true
+          type: object
+        sourceId:
+          $ref: '#/components/schemas/SourceId'
+        source:
+          $ref: '#/components/schemas/Enum'
+        ownerId:
+          description: Unique identifier of the user that made this expense.
+          example: 361
+          type: integer
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-ownerId
+        paymentMethodId:
+          $ref: '#/components/schemas/PaymentMethodId'
+        paymentMethod:
+          $ref: '#/components/schemas/Enum'
+        statusId:
+          $ref: '#/components/schemas/StatusId'
+        status:
+          $ref: '#/components/schemas/Enum'
+      required:
+      - expenseNatureId
+      - purchasedOn
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-get--api-v3-expenseTempItems-expenseTempItemId:
+      properties: {}
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-put--api-v3-expenseTempItems-expenseTempItemId:
+      properties:
+        id:
+          example: 11022
+          minimum: 1
+          readOnly: true
+          type: integer
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-id
+        purchasedOn:
+          description: Day the expense was made.
+          format: date-time
+          type: string
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-purchasedOn
+        originalTransaction:
+          description: Expense amount in original currency.
+          properties:
+            grossAmount:
+              example: 45.26
+              multipleOf: 0.01
+              type: number
+              x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-originalTransaction-properties-grossAmount
+            currencyId:
+              $ref: '#/components/schemas/CurrencyId'
+            isExpenseAbroad:
+              description: Whether the expense was made in a different country than
+                the owner establishment's.
+              example: false
+              type: boolean
+              x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-originalTransaction-properties-isExpenseAbroad
+            currency:
+              $ref: '#/components/schemas/Currency'
+          type: object
+        processedAmounts:
+          description: Various amounts in the establishment's currency.
+          properties:
+            grossAmount:
+              description: Original transaction amount converted into the establishment's
+                currency.
+              example: 57.9
+              multipleOf: 0.01
+              type: number
+              x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-processedAmounts-properties-grossAmount
+            currencyId:
+              $ref: '#/components/schemas/CurrencyId'
+            currency:
+              $ref: '#/components/schemas/Currency'
+            netAmount:
+              description: The converted amount after the expense policy has been
+                applied.
+              example: 57.9
+              multipleOf: 0.01
+              type: number
+              x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-processedAmounts-properties-netAmount
+            vatBases:
+              items:
+                properties:
+                  countryVatRateId:
+                    minimum: 1
+                    type: integer
+                  countryVatRate:
+                    description: Applicable VAT rate for this amount.
+                    properties:
+                      id:
+                        minimum: 1
+                        type: integer
+                      name:
+                        type: string
+                      url:
+                        format: uri
+                        type: string
+                    type: object
+                  vatAmount:
+                    multipleOf: 0.01
+                    type: number
+                  amountExcludingVat:
+                    multipleOf: 0.01
+                    type: number
+                type: object
+              type: array
+          readOnly: true
+          type: object
+        expenseNatureId:
+          description: "Nature of the expense: Meals, Train, Taxi, Hotels, Taxi, Mileage...\
+            \ List depends on the app configuration."
+          example: 1
+          minimum: 1
+          type: integer
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-expenseNatureId
+        mileage:
+          description: Additional information when the expense type is mileage.
+          properties:
+            distance:
+              description: Distance where the unit depends on the establishment.
+              type: number
+            power:
+              description: Tax horsepower of the vehicle.
+              type: number
+            waypoints:
+              description: The collection of waypoints including intermediate waypoints.
+              items: {}
+              type: array
+        quantity:
+          default: 1
+          description: The quantity when the expense type is 'Quantity'.
+          example: 1
+          minimum: 1
+          type: integer
+          x-konfig-original-example: 1
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-quantity
+        effectiveQuantity:
+          description: Calculated quantity when the expense type is 'Quantity' or
+            'Invitations' (number of attendees).
+          example: 3
+          minimum: 1
+          readOnly: true
+          type: integer
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-effectiveQuantity
+        attendees:
+          description: Additional information when the expense type is 'Invitation'.
+          properties:
+            internal:
+              description: "Attendees who work for the company (ie: Users in the system)."
+              items:
+                $ref: '#/components/schemas/User'
+              type: array
+            external:
+              description: "External attendees (eg: clients, candidates)."
+              items:
+                description: Id of the custom field.
+                properties:
+                  id:
+                    minimum: 1
+                    type: integer
+                  displayName:
+                    type: string
+                type: object
+              type: array
+        axisSections:
+          description: Axis sections values.
+          items:
+            $ref: '#/components/schemas/AxisSection'
+          type: array
+        customFields:
+          additionalProperties:
+            properties:
+              code:
+                description: Value inputted by the user.
+                type: string
+              name:
+                description: "Label corresponding to the input value based on the\
+                  \ configuration (eg: 'Yes' for checkbox)."
+                readOnly: true
+                type: string
+            type: object
+          description: Values for custom fields.
+          type: object
+        merchant:
+          description: Merchant of the expense.
+        comment: {}
+        expenseReceipts:
+          description: "The original receipt (PDF file, image, ...)."
+          items:
+            $ref: '#/components/schemas/ExpenseReceipt'
+          type: array
+        authorizedActions:
+          description: Authorized actions on the expense for the current user.
+          properties:
+            isCancellable:
+              description: Expense can be deleted by the current authenticated user.
+              example: true
+              type: boolean
+              x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-authorizedActions-properties-isCancellable
+            isEditable:
+              description: Expense can be edited by the current authenticated user.
+              example: true
+              type: boolean
+              x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-authorizedActions-properties-isEditable
+          readOnly: true
+          type: object
+        sourceId:
+          $ref: '#/components/schemas/SourceId'
+        source:
+          $ref: '#/components/schemas/Enum'
+        ownerId:
+          description: Unique identifier of the user that made this expense.
+          example: 361
+          type: integer
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-ownerId
+        paymentMethodId:
+          $ref: '#/components/schemas/PaymentMethodId'
+        paymentMethod:
+          $ref: '#/components/schemas/Enum'
+        statusId:
+          $ref: '#/components/schemas/StatusId'
+        status:
+          $ref: '#/components/schemas/Enum'
+      required:
+      - expenseNatureId
+      - purchasedOn
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-post--api-v3-expenseClaims-creation:
+      properties: {}
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter: []
+    konfig-generated-schema-single-parameter-schema-get--api-v3-expenseClaims:
+      properties:
+        ownerId:
+          items:
+            type: integer
+          type: array
+        orderBy:
+          type: string
+        declaredOn:
+          type: string
+        paging:
+          example: "100,0"
+          type: string
+          x-konfig-original-example: "100,0"
+          x-konfig-generated-schema: konfig-generated-schema-components-parameters-paging-schema
+        statusId:
+          type: string
+      required:
+      - paging
+      type: object
+      x-do-not-generate: true
+      x-konfig-is-parameter:
+      - ownerId
+      - orderBy
+      - declaredOn
+      - paging
+      - statusId
+    ExpenseTempItem_originalTransaction:
+      description: Expense amount in original currency.
+      example:
+        isExpenseAbroad: false
+        currency:
+          name: Euro
+          id: GBP
+          url: https://lucca.ilucca.net/api/v3/currencies/EUR
+        grossAmount: 45.26
+        currencyId: GBP
+      properties:
+        grossAmount:
+          example: 45.26
+          multipleOf: 0.01
+          type: number
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-originalTransaction-properties-grossAmount
+        currencyId:
+          description: "ISO code of the currency (eg: 'EUR', 'USD', 'GBP', ...)."
+          example: GBP
+          title: CurrencyId
+          type: string
+          x-stoplight:
+            id: kby33ilsirg33
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-CurrencyId
+        isExpenseAbroad:
+          description: Whether the expense was made in a different country than the
+            owner establishment's.
+          example: false
+          type: boolean
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-originalTransaction-properties-isExpenseAbroad
+        currency:
+          $ref: '#/components/schemas/Currency'
+      type: object
+    ExpenseTempItem_processedAmounts_vatBases_inner_countryVatRate:
+      description: Applicable VAT rate for this amount.
+      example:
+        name: name
+        id: 1
+        url: https://openapi-generator.tech
+      properties:
+        id:
+          minimum: 1
+          type: integer
+        name:
+          type: string
+        url:
+          format: uri
+          type: string
+      type: object
+    ExpenseTempItem_processedAmounts_vatBases_inner:
+      example:
+        countryVatRateId: 1
+        amountExcludingVat: 5.962133916683182
+        countryVatRate:
+          name: name
+          id: 1
+          url: https://openapi-generator.tech
+        vatAmount: 1.4658129805029452
+      properties:
+        countryVatRateId:
+          minimum: 1
+          type: integer
+        countryVatRate:
+          $ref: '#/components/schemas/ExpenseTempItem_processedAmounts_vatBases_inner_countryVatRate'
+        vatAmount:
+          multipleOf: 0.01
+          type: number
+        amountExcludingVat:
+          multipleOf: 0.01
+          type: number
+      type: object
+    ExpenseTempItem_processedAmounts:
+      description: Various amounts in the establishment's currency.
+      example:
+        vatBases:
+        - countryVatRateId: 1
+          amountExcludingVat: 5.962133916683182
+          countryVatRate:
+            name: name
+            id: 1
+            url: https://openapi-generator.tech
+          vatAmount: 1.4658129805029452
+        - countryVatRateId: 1
+          amountExcludingVat: 5.962133916683182
+          countryVatRate:
+            name: name
+            id: 1
+            url: https://openapi-generator.tech
+          vatAmount: 1.4658129805029452
+        netAmount: 57.9
+        currency:
+          name: Euro
+          id: GBP
+          url: https://lucca.ilucca.net/api/v3/currencies/EUR
+        grossAmount: 57.9
+        currencyId: GBP
+      properties:
+        grossAmount:
+          description: Original transaction amount converted into the establishment's
+            currency.
+          example: 57.9
+          multipleOf: 0.01
+          type: number
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-processedAmounts-properties-grossAmount
+        currencyId:
+          description: "ISO code of the currency (eg: 'EUR', 'USD', 'GBP', ...)."
+          example: GBP
+          title: CurrencyId
+          type: string
+          x-stoplight:
+            id: kby33ilsirg33
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-CurrencyId
+        currency:
+          $ref: '#/components/schemas/Currency'
+        netAmount:
+          description: The converted amount after the expense policy has been applied.
+          example: 57.9
+          multipleOf: 0.01
+          type: number
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-processedAmounts-properties-netAmount
+        vatBases:
+          items:
+            $ref: '#/components/schemas/ExpenseTempItem_processedAmounts_vatBases_inner'
+          type: array
+      readOnly: true
+      type: object
+    ExpenseTempItem_mileage:
+      description: Additional information when the expense type is mileage.
+      example:
+        distance: 5.637376656633329
+        power: 2.3021358869347655
+        waypoints:
+        - ""
+        - ""
+      properties:
+        distance:
+          description: Distance where the unit depends on the establishment.
+          type: number
+        power:
+          description: Tax horsepower of the vehicle.
+          type: number
+        waypoints:
+          description: The collection of waypoints including intermediate waypoints.
+          items: {}
+          type: array
+    ExpenseTempItem_attendees_external_inner:
+      description: Id of the custom field.
+      example:
+        displayName: displayName
+        id: 1
+      properties:
+        id:
+          minimum: 1
+          type: integer
+        displayName:
+          type: string
+      type: object
+    ExpenseTempItem_attendees:
+      description: Additional information when the expense type is 'Invitation'.
+      example:
+        internal:
+        - null
+        - null
+        external:
+        - displayName: displayName
+          id: 1
+        - displayName: displayName
+          id: 1
+      properties:
+        internal:
+          description: "Attendees who work for the company (ie: Users in the system)."
+          items:
+            $ref: '#/components/schemas/User'
+          type: array
+        external:
+          description: "External attendees (eg: clients, candidates)."
+          items:
+            $ref: '#/components/schemas/ExpenseTempItem_attendees_external_inner'
+          type: array
+    ExpenseTempItem_customFields_value:
+      example:
+        code: code
+        name: name
+      properties:
+        code:
+          description: Value inputted by the user.
+          type: string
+        name:
+          description: "Label corresponding to the input value based on the configuration\
+            \ (eg: 'Yes' for checkbox)."
+          readOnly: true
+          type: string
+      type: object
+    ExpenseTempItem_authorizedActions:
+      description: Authorized actions on the expense for the current user.
+      example:
+        isEditable: true
+        isCancellable: true
+      properties:
+        isCancellable:
+          description: Expense can be deleted by the current authenticated user.
+          example: true
+          type: boolean
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-authorizedActions-properties-isCancellable
+        isEditable:
+          description: Expense can be edited by the current authenticated user.
+          example: true
+          type: boolean
+          x-konfig-generated-schema: konfig-generated-schema-components-schemas-ExpenseTempItem-properties-authorizedActions-properties-isEditable
+      readOnly: true
+      type: object
+    ExpenseClaim_authorizedActions:
+      description: Authorized actions on the expenseClaim for the current user.
+      example:
+        isApprovable: true
+        isControllable: true
+        isEditable: true
+        isCancellable: true
+        isUnControllable: true
+      properties:
+        isCancellable:
+          description: The expenseClaim can be deleted by the current authenticated
+            user.
+          type: boolean
+        isEditable:
+          description: The expenseClaim can be edited by the current authenticated
+            user.
+          type: boolean
+        isApprovable:
+          description: The expenseClaim can be approved by the current authenticated
+            user.
+          type: boolean
+        isControllable:
+          description: The expenseClaim can be controlled by the current authenticated
+            user.
+          type: boolean
+        isUnControllable:
+          description: The current authenticated user can cancel the control of the
+            expenseClaim.
+          type: boolean
+      readOnly: true
+      type: object
+    ExpenseClaimsCreateNewExpenseClaimRequest_inner_expenseTempItems_inner:
+      properties:
+        id:
+          type: integer
+      required:
+      - id
+      type: object
+    ExpenseClaimsCreateNewExpenseClaimRequest_inner:
+      properties:
+        title:
+          description: "Human readable name for this ExpenseClaim (eg: \"May 2022\"\
+            )."
+          type: string
+        expenseTempItems:
+          description: List of all temporary expenses identifiers that should be included
+            in this expense claim.
+          items:
+            $ref: '#/components/schemas/ExpenseClaimsCreateNewExpenseClaimRequest_inner_expenseTempItems_inner'
+          minItems: 1
+          type: array
+      required:
+      - expenseTempItems
+      - title
+      type: object
+    ExpensesListTempItemsResponse_data:
+      example:
+        items:
+        - sourceId:
+            id: id
+          quantity: 1
+          attendees:
+            internal:
+            - null
+            - null
+            external:
+            - displayName: displayName
+              id: 1
+            - displayName: displayName
+              id: 1
+          customFields:
+            key:
+              code: code
+              name: name
+          processedAmounts:
+            vatBases:
+            - countryVatRateId: 1
+              amountExcludingVat: 5.962133916683182
+              countryVatRate:
+                name: name
+                id: 1
+                url: https://openapi-generator.tech
+              vatAmount: 1.4658129805029452
+            - countryVatRateId: 1
+              amountExcludingVat: 5.962133916683182
+              countryVatRate:
+                name: name
+                id: 1
+                url: https://openapi-generator.tech
+              vatAmount: 1.4658129805029452
+            netAmount: 57.9
+            currency:
+              name: Euro
+              id: GBP
+              url: https://lucca.ilucca.net/api/v3/currencies/EUR
+            grossAmount: 57.9
+            currencyId: GBP
+          merchant: ""
+          expenseReceipts:
+          - id: id
+          - id: id
+          source:
+            code: Api
+            name: API
+            id: 6
+          ownerId: 361
+          originalTransaction:
+            isExpenseAbroad: false
+            currency:
+              name: Euro
+              id: GBP
+              url: https://lucca.ilucca.net/api/v3/currencies/EUR
+            grossAmount: 45.26
+            currencyId: GBP
+          axisSections:
+          - null
+          - null
+          statusId:
+            id: 9.301444243932576
+          effectiveQuantity: 3
+          authorizedActions:
+            isEditable: true
+            isCancellable: true
+          paymentMethodId: null
+          expenseNatureId: 1
+          paymentMethod:
+            code: Api
+            name: API
+            id: 6
+          comment: ""
+          id: 11022
+          purchasedOn: 2000-01-23T04:56:07.000+00:00
+          mileage:
+            distance: 5.637376656633329
+            power: 2.3021358869347655
+            waypoints:
+            - ""
+            - ""
+          status:
+            code: Api
+            name: API
+            id: 6
+        - sourceId:
+            id: id
+          quantity: 1
+          attendees:
+            internal:
+            - null
+            - null
+            external:
+            - displayName: displayName
+              id: 1
+            - displayName: displayName
+              id: 1
+          customFields:
+            key:
+              code: code
+              name: name
+          processedAmounts:
+            vatBases:
+            - countryVatRateId: 1
+              amountExcludingVat: 5.962133916683182
+              countryVatRate:
+                name: name
+                id: 1
+                url: https://openapi-generator.tech
+              vatAmount: 1.4658129805029452
+            - countryVatRateId: 1
+              amountExcludingVat: 5.962133916683182
+              countryVatRate:
+                name: name
+                id: 1
+                url: https://openapi-generator.tech
+              vatAmount: 1.4658129805029452
+            netAmount: 57.9
+            currency:
+              name: Euro
+              id: GBP
+              url: https://lucca.ilucca.net/api/v3/currencies/EUR
+            grossAmount: 57.9
+            currencyId: GBP
+          merchant: ""
+          expenseReceipts:
+          - id: id
+          - id: id
+          source:
+            code: Api
+            name: API
+            id: 6
+          ownerId: 361
+          originalTransaction:
+            isExpenseAbroad: false
+            currency:
+              name: Euro
+              id: GBP
+              url: https://lucca.ilucca.net/api/v3/currencies/EUR
+            grossAmount: 45.26
+            currencyId: GBP
+          axisSections:
+          - null
+          - null
+          statusId:
+            id: 9.301444243932576
+          effectiveQuantity: 3
+          authorizedActions:
+            isEditable: true
+            isCancellable: true
+          paymentMethodId: null
+          expenseNatureId: 1
+          paymentMethod:
+            code: Api
+            name: API
+            id: 6
+          comment: ""
+          id: 11022
+          purchasedOn: 2000-01-23T04:56:07.000+00:00
+          mileage:
+            distance: 5.637376656633329
+            power: 2.3021358869347655
+            waypoints:
+            - ""
+            - ""
+          status:
+            code: Api
+            name: API
+            id: 6
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ExpenseTempItem'
+          type: array
+      type: object
+    ExpenseClaimsCreateNewExpenseClaimResponse_data_inner_createdExpenseClaim_nextApprover:
+      example:
+        firstName: firstName
+        lastName: lastName
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+      type: object
+    ExpenseClaimsCreateNewExpenseClaimResponse_data_inner_createdExpenseClaim:
+      example:
+        nextApprover:
+          firstName: firstName
+          lastName: lastName
+        id: 0
+      properties:
+        id:
+          type: integer
+        nextApprover:
+          $ref: '#/components/schemas/ExpenseClaimsCreateNewExpenseClaimResponse_data_inner_createdExpenseClaim_nextApprover'
+      type: object
+    ExpenseClaimsCreateNewExpenseClaimResponse_data_inner:
+      example:
+        createdExpenseClaim:
+          nextApprover:
+            firstName: firstName
+            lastName: lastName
+          id: 0
+      properties:
+        createdExpenseClaim:
+          $ref: '#/components/schemas/ExpenseClaimsCreateNewExpenseClaimResponse_data_inner_createdExpenseClaim'
+      type: object
+    ExpenseClaimsListResponse_data:
+      example:
+        items:
+        - sourceId:
+            id: id
+          departmentId: 3
+          source:
+            code: Api
+            name: API
+            id: 6
+          ownerId: 5
+          createdOn: 2000-01-23T04:56:07.000+00:00
+          legalEntity:
+            name: name
+            id: 7
+            url: url
+          modifiedOn: 2000-01-23T04:56:07.000+00:00
+          legalEntityId: 9
+          paymentMethodId: null
+          authorizedActions:
+            isApprovable: true
+            isControllable: true
+            isEditable: true
+            isCancellable: true
+            isUnControllable: true
+          declaredOn: 2000-01-23T04:56:07.000+00:00
+          currency:
+            name: Euro
+            id: GBP
+            url: https://lucca.ilucca.net/api/v3/currencies/EUR
+          id: 1
+          department:
+            name: name
+            id: 7
+            url: url
+          currencyId: GBP
+          owner:
+            firstName: firstName
+            lastName: lastName
+            name: name
+            id: 1
+            url: https://openapi-generator.tech
+          approvalStateId:
+            id: 1.4658129805029452
+          author:
+            name: name
+            id: 7
+            url: url
+          approvalState:
+            code: Api
+            name: API
+            id: 6
+          paymentReceivedOn: 2000-01-23T04:56:07.000+00:00
+          authorId: 2
+          statusId:
+            id: 6.027456183070403
+          name: name
+          paymentMethod:
+            code: Api
+            name: API
+            id: 6
+          status:
+            code: Api
+            name: API
+            id: 6
+        - sourceId:
+            id: id
+          departmentId: 3
+          source:
+            code: Api
+            name: API
+            id: 6
+          ownerId: 5
+          createdOn: 2000-01-23T04:56:07.000+00:00
+          legalEntity:
+            name: name
+            id: 7
+            url: url
+          modifiedOn: 2000-01-23T04:56:07.000+00:00
+          legalEntityId: 9
+          paymentMethodId: null
+          authorizedActions:
+            isApprovable: true
+            isControllable: true
+            isEditable: true
+            isCancellable: true
+            isUnControllable: true
+          declaredOn: 2000-01-23T04:56:07.000+00:00
+          currency:
+            name: Euro
+            id: GBP
+            url: https://lucca.ilucca.net/api/v3/currencies/EUR
+          id: 1
+          department:
+            name: name
+            id: 7
+            url: url
+          currencyId: GBP
+          owner:
+            firstName: firstName
+            lastName: lastName
+            name: name
+            id: 1
+            url: https://openapi-generator.tech
+          approvalStateId:
+            id: 1.4658129805029452
+          author:
+            name: name
+            id: 7
+            url: url
+          approvalState:
+            code: Api
+            name: API
+            id: 6
+          paymentReceivedOn: 2000-01-23T04:56:07.000+00:00
+          authorId: 2
+          statusId:
+            id: 6.027456183070403
+          name: name
+          paymentMethod:
+            code: Api
+            name: API
+            id: 6
+          status:
+            code: Api
+            name: API
+            id: 6
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ExpenseClaim'
+          type: array
+      type: object
+  securitySchemes:
+    Authorization:
+      description: "Header value must be equal to `lucca application={yourApiKey}`"
+      in: header
+      name: Authorization
+      type: apiKey
+      x-konfig-globally-required-security: true
+x-stoplight:
+  id: w9tbmpilgjq8x
+
